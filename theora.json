@@ -1,0 +1,13 @@
+{
+    "name": "theora",
+    "description": "Theora decoder",
+    "filters":["theoradec"],
+    "help": "This filter decodes Theora streams through libtheora library.",
+    "support": [
+        "video"
+    ],
+    "sources":"https://codeload.github.com/Bevara/theora/zip/refs/heads/main",
+    "filter_source":{
+        "theoradec" : "dec_theora.c"
+    }
+}
