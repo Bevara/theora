@@ -307,7 +307,7 @@ GF_FilterRegister TheoraDecRegister = {
 
 #endif
 
-const GF_FilterRegister *dynCall_theoradec_register(GF_FilterSession *session)
+const GF_FilterRegister * EMSCRIPTEN_KEEPALIVE dynCall_theoradec_register(GF_FilterSession *session)
 {
 #ifdef GPAC_HAS_THEORA
 	return &TheoraDecRegister;
