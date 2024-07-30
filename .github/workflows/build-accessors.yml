@@ -14,9 +14,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: numworks/setup-emscripten
-      with:
-        sdk: latest-fastcomp
     - run: emcc --version
   
     - uses: actions/checkout@v4
