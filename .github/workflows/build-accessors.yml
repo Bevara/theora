@@ -14,7 +14,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - run: emcc --version
+    - uses: mymindstorm/setup-emsdk@v14
+
+    - name: Verify
+      run: emcc -v
   
     - uses: actions/checkout@v4
 
