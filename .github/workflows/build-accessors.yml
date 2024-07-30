@@ -15,7 +15,9 @@ jobs:
 
     steps:
     - uses: mymindstorm/setup-emsdk@v14
-
+      with:
+        version: 3.1.56
+        
     - name: Verify
       run: emcc -v
   
