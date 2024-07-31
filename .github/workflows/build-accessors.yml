@@ -29,5 +29,6 @@ jobs:
     - name: Release
       uses: softprops/action-gh-release@v2
       with:
+        tag_name: 1
         files: build/theora_1.wasm
 
