@@ -30,5 +30,6 @@ jobs:
       uses: softprops/action-gh-release@v2
       with:
         tag_name: 1
+        token : ${{ secrets.RELEASE_TOKEN }}
         files: build/theora_1.wasm
 
