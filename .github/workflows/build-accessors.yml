@@ -29,7 +29,7 @@ jobs:
       run: |
         target=$(cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}  | sed 's/.*Built target //')
         echo "target=$target" >> $GITHUB_ENV
-        echo "::set-output name=target::$target
+        echo "::set-output name=target::$target"
 
     - name: Print the target
       run: |
