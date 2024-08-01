@@ -28,7 +28,7 @@ jobs:
 
     - name: Retrieve version
       run: |
-        echo "TAG_NAME= $(awk -F'[()]' '/add_filter/{print $2}' CMakeLists.txt | awk '{print $1}')" >> $GITHUB_OUTPUT
+        echo "TAG_NAME=$(awk -F'[()]' '/add_filter/{print $2}' CMakeLists.txt | awk '{print $1}')" >> $GITHUB_OUTPUT
       id: version
 
     - name: Release
