@@ -12,6 +12,8 @@ env:
 jobs:
   build:
     runs-on: ubuntu-latest
+    outputs:
+      target: ${{ steps.extract.outputs.target }}
 
     steps:
     - uses: mymindstorm/setup-emsdk@v14
@@ -24,12 +26,19 @@ jobs:
       run: emcmake cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
 
     - name: Build
-      run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}  | sed 's/.*Built target //' >> $ACCESSOR_RELEASE
+      run: |
+        target=$(cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}  | sed 's/.*Built target //')
+        echo "target=$target" >> $GITHUB_ENV
+        echo "::set-output name=target::$target
+
+    - name: Print the target
+      run: |
+        echo "Target from previous job: ${{ needs.extract-target.outputs.target }}"
 
     - name: Release
       uses: softprops/action-gh-release@v2
       with:
         tag_name: 1
         token : ${{ secrets.RELEASE_TOKEN }}
-        files: build/$ACCESSOR_RELEASE
+        files: build/${{ needs.extract-target.outputs.target }}"
 
