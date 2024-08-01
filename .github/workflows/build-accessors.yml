@@ -24,12 +24,12 @@ jobs:
       run: emcmake cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
 
     - name: Build
-      run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
+      run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}  | sed 's/.*Built target //' >> $ACCESSOR_RELEASE
 
     - name: Release
       uses: softprops/action-gh-release@v2
       with:
         tag_name: 1
         token : ${{ secrets.RELEASE_TOKEN }}
-        files: build/theora_1.wasm
+        files: build/$ACCESSOR_RELEASE
 
