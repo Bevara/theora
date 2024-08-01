@@ -8,6 +8,8 @@ on:
 
 env:
   BUILD_TYPE: Release
+  EMCC_VERSION: 3.1.56
+  TAG_NUMBER: 1
 
 jobs:
   build:
@@ -16,7 +18,7 @@ jobs:
     steps:
     - uses: mymindstorm/setup-emsdk@v14
       with:
-        version: 3.1.56
+        version: ${{env.EMCC_VERSION}}
   
     - uses: actions/checkout@v4
 
@@ -26,7 +28,7 @@ jobs:
     - name: Build
       run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
 
-    - name: Retrieve version
+    - name: Retrieve tag name
       run: |
         echo "TAG_NAME=$(awk -F'[()]' '/add_filter/{print $2}' CMakeLists.txt | awk '{print $1}')" >> $GITHUB_OUTPUT
       id: version
@@ -34,7 +36,7 @@ jobs:
     - name: Release
       uses: softprops/action-gh-release@v2
       with:
-        tag_name: 1
+        tag_name: ${{env.TAG_NUMBER}}
         token : ${{ secrets.RELEASE_TOKEN }}
-        files: build/${{ steps.version.outputs.TAG_NAME }}_1.wasm
+        files: build/${{ steps.version.outputs.TAG_NAME }}_${{env.TAG_NUMBER}}.wasm
 
