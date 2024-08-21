@@ -9,5 +9,7 @@
     "sources":"https://codeload.github.com/Bevara/theora/zip/refs/heads/main",
     "filter_source":{
         "theoradec" : "dec_theora.c"
-    }
+    },
+    "Format": ["Theora"],
+    "licence_required":false
 }
