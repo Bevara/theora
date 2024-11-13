@@ -35,12 +35,14 @@ jobs:
 
     - name: Rename description file for release
       run: cp ${{ steps.version.outputs.TAG_NAME }}.json ${{ steps.version.outputs.TAG_NAME }}_${{env.TAG_NUMBER}}.json
+
+    - name: Move accessor to the root of the project
+      run: cp build/${{ steps.version.outputs.TAG_NAME }}_${{env.TAG_NUMBER}}.wasm ${{ steps.version.outputs.TAG_NAME }}_${{env.TAG_NUMBER}}.wasm
           
-    - name: Release
-      uses: softprops/action-gh-release@v2
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v4
       with:
-        tag_name: ${{env.TAG_NUMBER}}
-        token : ${{ secrets.RELEASE_TOKEN }}
-        files: |
-          build/${{ steps.version.outputs.TAG_NAME }}_${{env.TAG_NUMBER}}.wasm,
+        name: accessor-build  
+        path: |
+          ${{ steps.version.outputs.TAG_NAME }}_${{env.TAG_NUMBER}}.wasm
           ${{ steps.version.outputs.TAG_NAME }}_${{env.TAG_NUMBER}}.json
