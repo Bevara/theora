@@ -3,14 +3,6 @@ project(Filters)
 
 include(filters.cmake)
 
-set(CMAKE_BUILD_TYPE Release)
-set(CMAKE_CXX_FLAGS "-O3 -Wall -Wextra")
-set(CMAKE_C_FLAGS "-O3 -Wall -Wextra")
-
-#set(CMAKE_BUILD_TYPE Debug)
-#set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -g")
-#set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -g")
-
 add_definitions(-fpic)
 
 SET(THEORA_SRC
