@@ -316,3 +316,8 @@ const GF_FilterRegister * EMSCRIPTEN_KEEPALIVE dynCall_theoradec_register(GF_Fil
 #endif
 }
 
+#include "filter_register.h"
+__attribute__((constructor))
+void register_theoradec(void) {
+    gf_filter_auto_register("theoradec", dynCall_theoradec_register);
+}
