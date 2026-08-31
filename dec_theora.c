@@ -124,6 +124,21 @@ static GF_Err theoradec_configure_pid(GF_Filter *filter, GF_FilterPid *pid, Bool
 	theora_decode_init(&ctx->td, &ctx->ti);
 	gf_bs_del(bs);
 
+	/* WIDTH/HEIGHT/PIXFMT must be set here, not just after the first decoded
+	 * frame in process(): GPAC's Dijkstra filter-graph resolution runs right
+	 * after this PID connects, before any packet is processed, and needs
+	 * PIXFMT on the PID to route to a downstream encoder (e.g. encx264) - if
+	 * it's still unset, resolution silently fails with "no results found"
+	 * even though theora_decode_init() above already gives us the real
+	 * width/height/fps (theora is always GF_PIXEL_YUV, no guesswork needed)
+	 * - same class of fix as dec_bpg.c/dec_qoi.c. */
+	memcpy(&ctx->the_ti, &ctx->ti, sizeof(theora_info));
+	gf_filter_pid_set_property(ctx->opid, GF_PROP_PID_WIDTH, &PROP_UINT(ctx->ti.width));
+	gf_filter_pid_set_property(ctx->opid, GF_PROP_PID_HEIGHT, &PROP_UINT(ctx->ti.height));
+	gf_filter_pid_set_property(ctx->opid, GF_PROP_PID_STRIDE, &PROP_UINT(ctx->ti.width));
+	gf_filter_pid_set_property(ctx->opid, GF_PROP_PID_FPS, &PROP_FRAC_INT(ctx->ti.fps_numerator, ctx->ti.fps_denominator));
+	gf_filter_pid_set_property(ctx->opid, GF_PROP_PID_PIXFMT, &PROP_UINT(GF_PIXEL_YUV));
+
 	return GF_OK;
 }
 
