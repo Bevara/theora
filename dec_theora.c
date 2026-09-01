@@ -322,7 +322,7 @@ GF_FilterRegister TheoraDecRegister = {
 
 #endif
 
-const GF_FilterRegister * EMSCRIPTEN_KEEPALIVE dynCall_theoradec_register(GF_FilterSession *session)
+const GF_FilterRegister * EMSCRIPTEN_KEEPALIVE theoradec_register(GF_FilterSession *session)
 {
 #ifdef GPAC_HAS_THEORA
 	return &TheoraDecRegister;
@@ -334,5 +334,5 @@ const GF_FilterRegister * EMSCRIPTEN_KEEPALIVE dynCall_theoradec_register(GF_Fil
 #include "filter_register.h"
 __attribute__((constructor))
 void register_theoradec(void) {
-    gf_filter_auto_register("theoradec", dynCall_theoradec_register);
+    gf_filter_auto_register("theoradec", theoradec_register);
 }
