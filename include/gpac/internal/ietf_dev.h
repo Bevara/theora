@@ -2,7 +2,7 @@
  *			GPAC - Multimedia Framework C SDK
  *
  *			Authors: Jean Le Feuvre
- *			Copyright (c) Telecom ParisTech 2000-2023
+ *			Copyright (c) Telecom ParisTech 2000-2026
  *					All rights reserved
  *
  *  This file is part of GPAC / IETF RTP/RTSP/SDP sub-project
@@ -185,7 +185,7 @@ struct __tag_rtp_channel
 	GF_RTCP_Report rtcp_rr[MAX_RTCP_RR];
 	u32 nb_rctp_rr;
 
-
+	const char *netcap_id;
 	const char **ssm, **ssmx;
 	u32 nb_ssm, nb_ssmx;
 	u8 disc_state;
@@ -211,13 +211,17 @@ Bool gf_rtp_is_disc(GF_RTPChannel *ch);
 /*macros for RTSP command and response formmating*/
 #define RTSP_WRITE_STEPALLOC	250
 
-#define RTSP_WRITE_ALLOC_STR_WITHOUT_CHECK(buf, buf_size, pos, str)		\
-	if (strlen((const char *) str)+pos >= buf_size) {	\
-		buf_size += (u32) strlen((const char *) str);	\
+#define RTSP_WRITE_ALLOC_STR_WITHOUT_CHECK(buf, buf_size, pos, str)	{	\
+	u32 _alen = (u32) strlen((const char *) str);\
+	if (_alen+pos >= buf_size) {	\
+		buf_size += _alen+1;	\
 		buf = (char *) gf_realloc(buf, buf_size);		\
 	}	\
-	strcpy(buf+pos, (const char *) str);		\
-	pos += (u32) strlen((const char *) str); \
+	memcpy(buf+pos, str, _alen);		\
+	buf[pos+_alen]=0;		\
+	pos += _alen; \
+}
+
  
 #define RTSP_WRITE_ALLOC_STR(buf, buf_size, pos, str)		\
 	if (str){	\
@@ -303,6 +307,8 @@ struct _tag_rtsp_session
 	GF_Socket *http;
 	char *HTTP_Cookie;
 	u32 tunnel_state;
+
+	const char *netcap_id;
 
 	/*RTSP CHANNEL*/
 	GF_Socket *connection;
@@ -492,6 +498,9 @@ GF_Err gp_rtp_builder_do_hevc(GP_RTPPacketizer *builder, u8 *data, u32 data_size
 GF_Err gp_rtp_builder_do_mp2t(GP_RTPPacketizer *builder, u8 *data, u32 data_size, u8 IsAUEnd, u32 FullAUSize);
 GF_Err gp_rtp_builder_do_vvc(GP_RTPPacketizer *builder, u8 *data, u32 data_size, u8 IsAUEnd, u32 FullAUSize);
 GF_Err gp_rtp_builder_do_opus(GP_RTPPacketizer *builder, u8 *data, u32 data_size, u8 IsAUEnd, u32 FullAUSize);
+#if GPAC_ENABLE_3GPP_DIMS_RTP
+GF_Err gp_rtp_builder_do_dims(GP_RTPPacketizer *builder, u8 *data, u32 data_size, u8 IsAUEnd, u32 FullAUSize, u32 duration);
+#endif
 
 #define RTP_VVC_AGG_NAL		0x1C //28
 #define RTP_VVC_FRAG_NAL	0x1D //29

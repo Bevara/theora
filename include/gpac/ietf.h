@@ -2,7 +2,7 @@
  *			GPAC - Multimedia Framework C SDK
  *
  *			Authors: Jean Le Feuvre
- *			Copyright (c) Telecom ParisTech 2000-2023
+ *			Copyright (c) Telecom ParisTech 2000-2026
  *					All rights reserved
  *
  *  This file is part of GPAC / IETF RTP/RTSP/SDP sub-project
@@ -666,6 +666,13 @@ const char *gf_rtsp_get_session_cookie(GF_RTSPSession *sess);
 */
 GF_Err gf_rtsp_merge_tunnel(GF_RTSPSession *sess, GF_RTSPSession *post_sess);
 
+/*! sets associated netcap rules
+\param sess the target RTSP session
+\param netcap_id ID of netcap configuration to use, may be null (see gpac -h netcap)
+
+*/
+void gf_rtsp_session_set_netcap_id(GF_RTSPSession *sess, const char *netcap_id);
+
 /*
 		RTP LIB EXPORTS
 */
@@ -719,6 +726,13 @@ typedef struct __tag_rtp_channel GF_RTPChannel;
 \return a newly allocated RTP channel
 */
 GF_RTPChannel *gf_rtp_new();
+
+/*! creates a new RTP channel
+\param netcap_id ID of netcap configuration to use, may be null (see gpac -h netcap)
+\return a newly allocated RTP channel
+*/
+GF_RTPChannel *gf_rtp_new_ex(const char *netcap_id);
+
 /*! destroys an RTP channel
 \param ch the target RTP channel
 */
@@ -1378,6 +1392,8 @@ enum
 
 	/*is zip compression used in DIMS unit ?*/
 	GP_RTP_DIMS_COMPRESSED =	(1<<12),
+	/* static RTP payloadID must be used, throw error if not defined*/
+	GP_RTP_PCK_FORCE_STATIC_ID =	(1<<13),
 };
 
 
@@ -1581,19 +1597,23 @@ GF_Err gf_rtp_builder_process(GP_RTPPacketizer *builder, u8 *data, u32 data_size
 /*! formats the "fmtp: " attribute for the MPEG-4 generic packetizer. sdpline shall be at least 2000 char
 \param builder the target RTP packetizer
 \param payload_name name of the payload to use (profile of RFC 3640)
-\param sdp_line SDP line buffer to fill
+\param out_sdp_line SDP line buffer produced - must be freed by caller
 \param dsi decoder config of stream if any, or NULL
 \param dsi_size size of the decoder config
 \return error if any
 */
-GF_Err gf_rtp_builder_format_sdp(GP_RTPPacketizer *builder, char *payload_name, char *sdp_line, char *dsi, u32 dsi_size);
+GF_Err gf_rtp_builder_format_sdp(GP_RTPPacketizer *builder, char *payload_name, char **out_sdp_line, char *dsi, u32 dsi_size);
+
+#define MAX_PAYT_LEN 20
+#define MAX_MEDIA_LEN 20
+
 /*! formats SDP payload name and media name
 \param builder the target RTP packetizer
 \param payload_name the buffer to fill with the payload name
 \param media_name the buffer to fill with the payload name
 \return GF_TRUE if success, GF_FALSE otherwise
 */
-Bool gf_rtp_builder_get_payload_name(GP_RTPPacketizer *builder, char payload_name[20], char media_name[20]);
+Bool gf_rtp_builder_get_payload_name(GP_RTPPacketizer *builder, char payload_name[MAX_PAYT_LEN], char media_name[MAX_MEDIA_LEN]);
 
 
 /*! rtp payload flags*/

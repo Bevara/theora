@@ -2,7 +2,7 @@
  *			GPAC - Multimedia Framework C SDK
  *
  *			Authors: Jean Le Feuvre
- *			Copyright (c) Telecom ParisTech 2000-2023
+ *			Copyright (c) Telecom ParisTech 2000-2024
  *					All rights reserved
  *
  *  This file is part of GPAC / media tools sub-project
@@ -74,7 +74,7 @@ Constructs a new RTP file streamer
 \param sample_rate audio sample rate
 \param nb_ch number of channels in audio streams
 \param is_crypted Boolean indicating if the stream is crypted
-\param IV_length lenght of the Initialisation Vector used for encryption
+\param IV_length length of the Initialisation Vector used for encryption
 \param KI_length length of the key index
 \param MinSize minimum AU size, 0 if unknown
 \param MaxSize maximum AU size, 0 if unknown
@@ -93,6 +93,72 @@ GF_RTPStreamer *gf_rtp_streamer_new(u32 streamType, u32 codecid, u32 timeScale,
         u32 PayloadType, u32 sample_rate, u32 nb_ch,
         Bool is_crypted, u32 IV_length, u32 KI_length,
         u32 MinSize, u32 MaxSize, u32 avgTS, u32 maxDTSDelta, u32 const_dur, u32 bandwidth, u32 max_ptime, u32 au_sn_len, Bool for_rtsp);
+
+/*! RTP streamer configuration*/
+typedef struct
+{
+	//! type of the stream (GF_STREAM_* as defined in <gpac/constants.h>
+	u32 streamType;
+	//! codec ID for the stream (GF_CODEC_* as defined in <gpac/constants.h>)
+	u32 codecid;
+	//! unit to express timestamps of access units
+	u32 timeScale;
+	//! IP address of the destination
+	const char *ip_dest;
+	//! port number of the destination
+	u16 port;
+	//! Maximum Transmission Unit size to use
+	u32 MTU;
+	//! Time To Leave
+	u8 TTL;
+	//! IP of the local interface to use (may be NULL)
+	const char *ifce_addr;
+	//! set of RTP flags passed to the streamer
+	u32 flags;
+	//! MPEG-4 Decoder Specific Info for the stream
+	const u8 *dsi;
+	//! length of the dsi parameter
+	u32 dsi_len;
+	//! RTP payload type
+	u32 PayloadType;
+	//!  audio sample rate
+	u32 sample_rate;
+	//! number of channels in audio streams
+	u32 nb_ch;
+	//! indicating if the stream is crypted
+	Bool is_crypted;
+	//! length of the Initialisation Vector used for ISMA encryption
+	u32 IV_length;
+	//! length of the key index
+	u32 KI_length;
+	//! minimum AU size, 0 if unknown
+	u32 MinSize;
+	//maximum AU size, 0 if unknown
+	u32 MaxSize;
+	//! average TS delta in timeScale, 0 if unknown
+	u32 avgTS;
+	//! maximum DTS delta in timeScale, 0 if unknown
+	u32 maxDTSDelta;
+	//! constant duration in timeScale, 0 if unknown
+	u32 const_dur;
+	//! bandwidth, 0 if unknown
+	u32 bandwidth;
+	//! maximum packet duration in timeScale, 0 if unknown
+	u32 max_ptime;
+	//! length of the MPEG-4 SL descriptor AU sequence number field, 0 if unknown
+	u32 au_sn_len;
+	//! ID of netcap configuration to use, may be null (see gpac -h netcap)
+	const char *netcap_id;
+} GF_RTPStreamerConfig;
+
+/*!
+\brief RTP Streamer constructor with extended parameters
+
+Constructs a new RTP file streamer
+\param cfg configuration of the streamer
+\param for_rtsp indicates this is an RTP channel in an RTSP session, RTP channel will not be created, use \ref gf_rtp_streamer_init_rtsp
+\return a new RTP streamer, or NULL of error or not supported
+ */GF_RTPStreamer *gf_rtp_streamer_new_ex(const GF_RTPStreamerConfig *cfg, Bool for_rtsp);
 
 /*!
 \brief RTP file streamer destructor
@@ -134,12 +200,12 @@ Gets the SDP asscoiated with all media in the streaming session (only media part
 \param tx text window horizontal offset
 \param ty text window vertical offset
 \param tl text window z-index
-\param nb_chan number of audio channels, 0 if unknown
+\param nb_channels number of audio channels, 0 if unknown
 \param for_rtsp if GF_TRUE, produces the SDP for an RTSP describe (no port info)
 \param out_sdp_buffer location to the SDP buffer to allocate and fill
 \return error if any
  */
-GF_Err gf_rtp_streamer_append_sdp_extended(GF_RTPStreamer *rtp, u16 ESID, const u8 *dsi, u32 dsi_len, const u8 *dsi_enh, u32 dsi_enh_len, char *KMS_URI, u32 width, u32 height, u32 tw, u32 th, s32 tx, s32 ty, s16 tl, u32 nb_chan, Bool for_rtsp, char **out_sdp_buffer);
+GF_Err gf_rtp_streamer_append_sdp_extended(GF_RTPStreamer *rtp, u16 ESID, const u8 *dsi, u32 dsi_len, const u8 *dsi_enh, u32 dsi_enh_len, char *KMS_URI, u32 width, u32 height, u32 tw, u32 th, s32 tx, s32 ty, s16 tl, u32 nb_channels, Bool for_rtsp, char **out_sdp_buffer);
 
 /*! sends a full Access Unit over RTP
 \param rtp the target RTP streamer
@@ -243,7 +309,7 @@ u16 gf_rtp_streamer_get_next_rtp_sn(GF_RTPStreamer *streamer);
 GF_Err gf_rtp_streamer_set_interleave_callbacks(GF_RTPStreamer *streamer, GF_Err (*RTP_TCPCallback)(void *cbk1, void *cbk2, Bool is_rtcp, u8 *pck, u32 pck_size), void *cbk1, void *cbk2);
 
 
-/*! callback function for procesing RTCP  receiver reports
+/*! callback function for processing RTCP  receiver reports
 \param cbk user data passed to \ref  gf_rtp_streamer_read_rtcp
 \param ssrc ssrc for this report, 0 if same as ssrc of channel
 \param rtt_ms round-trip time estimate in ms
@@ -272,6 +338,12 @@ u32 gf_rtp_streamer_get_ssrc(GF_RTPStreamer *streamer);
 */
 u32 gf_rtp_streamer_get_timescale(GF_RTPStreamer *streamer);
 
+/*! gets codecid of this streamer
+\param streamer the target RTP streamer
+\return CodecID
+*/
+u32 gf_rtp_streamer_get_codecid(GF_RTPStreamer *streamer);
+
 /*! @} */
 
 #ifdef __cplusplus
@@ -281,4 +353,3 @@ u32 gf_rtp_streamer_get_timescale(GF_RTPStreamer *streamer);
 #endif //GPAC_DISABLE_ISOM && GPAC_DISABLE_STREAMING
 
 #endif		/*_GF_RTPSTREAMER_H_*/
-
