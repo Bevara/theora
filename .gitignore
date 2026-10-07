@@ -1,2 +1,6 @@
 build/
 .vscode/settings.json
+
+# Bevara: build output of `bevara build` / `bevara publish --build`
+.bevara/*
+!.bevara/.gitkeep
