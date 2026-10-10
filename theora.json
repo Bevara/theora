@@ -12,5 +12,19 @@
     },
     "Format": ["Theora"],
     "licence_required":false,
-    "using": ["solver_minimal_1", "solver_1"]
+    "using": ["solver_minimal_1", "solver_1"],
+    "runtime": {
+        "theoradec": {
+            "outputs": [
+                {
+                    "property": "GF_PROP_PID_PIXFMT",
+                    "format": [
+                        "GF_PIXEL_YUV422",
+                        "GF_PIXEL_YUV444",
+                        "GF_PIXEL_YUV"
+                    ]
+                }
+            ]
+        }
+    }
 }
