@@ -2,7 +2,7 @@ SPDX-License-Identifier: LGPL-2.1-or-later AND BSD-3-Clause
 
 theora - Theora decoder accessor
 
-This accessor is a combined work: its filter sources come from GPAC, Copyright (c) Telecom Paris, under LGPL-2.1-or-later, adapted by Bevara (Copyright (c) 2026 Bevara); it statically links libtheora 1.2.0 (Xiph.Org Foundation) under BSD-3-Clause.
+This accessor is a combined work: its filter sources come from GPAC, Copyright (c) Telecom Paris, under LGPL-2.1-or-later, adapted by Bevara Technologies, LLC (Copyright (c) 2026 Bevara Technologies, LLC); it statically links libtheora 1.2.0 (Xiph.Org Foundation) under BSD-3-Clause.
 
 The texts of these licences follow.
 
