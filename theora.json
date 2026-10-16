@@ -11,7 +11,6 @@
         "theoradec" : "dec_theora.c"
     },
     "Format": ["Theora"],
-    "licence_required":false,
     "using": ["solver_minimal_1", "solver_1"],
     "runtime": {
         "theoradec": {
@@ -26,5 +25,10 @@
                 }
             ]
         }
+    },
+    "patents": {
+        "status": "royalty-free",
+        "note": "Theora, royalty-free (Xiph.Org)",
+        "checked": "2026-10-16"
     }
 }
