@@ -1,5 +1,6 @@
 {
     "name": "theora",
+    "version": "1.0.1",
     "description": "Theora decoder",
     "filters":["theoradec"],
     "help": "This filter decodes Theora streams through libtheora library.",
