@@ -1,6 +1,6 @@
 {
     "name": "theora",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "description": "Theora decoder",
     "filters":["theoradec"],
     "help": "This filter decodes Theora streams through libtheora library.",
@@ -12,7 +12,7 @@
         "theoradec" : "dec_theora.c"
     },
     "Format": ["Theora"],
-    "using": ["solver_minimal_1", "solver_1"],
+    "using": ["mm_solver_minimal_1.0.1", "mm_solver_1.0.1"],
     "runtime": {
         "theoradec": {
             "outputs": [
