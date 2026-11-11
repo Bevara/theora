@@ -2,17 +2,28 @@
     "name": "theora",
     "version": "1.0.2",
     "description": "Theora decoder",
-    "filters":["theoradec"],
+    "filters": [
+        "theoradec"
+    ],
     "help": "This filter decodes Theora streams through libtheora library.",
     "support": [
         "video"
     ],
-    "sources":"https://codeload.github.com/Bevara/theora/zip/refs/heads/main",
-    "filter_source":{
-        "theoradec" : "dec_theora.c"
+    "sources": "https://codeload.github.com/Bevara/theora/zip/refs/heads/main",
+    "filter_source": {
+        "theoradec": "dec_theora.c"
     },
-    "Format": ["Theora"],
-    "using": ["mm_solver_minimal_1.0.1", "mm_solver_1.0.1", "mm_solver_1.0.2", "mm_solver_1.0.3", "mm_solver_1.0.4"],
+    "Format": [
+        "Theora"
+    ],
+    "using": [
+        "mm_solver_minimal_1.0.1",
+        "mm_solver_1.0.1",
+        "mm_solver_1.0.2",
+        "mm_solver_1.0.3",
+        "mm_solver_1.0.4",
+        "mm_solver_1.0.5"
+    ],
     "runtime": {
         "theoradec": {
             "outputs": [
